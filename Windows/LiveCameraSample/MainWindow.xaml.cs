@@ -237,7 +237,7 @@ namespace LiveCameraSample
             var emotions = faces.Select(e => e.FaceAttributes.Emotion).ToArray();
             foreach (var emotion in emotions)
             {
-                if (emotion.Sadness >= 0.8)
+                if (emotion.Sadness >= 0.6)
                 {
                     MessageBox.Show($"I've detected you are {emotions}, we have sent an panic emergency to get you a coffee.");
                     await AddPanicEmergency();
