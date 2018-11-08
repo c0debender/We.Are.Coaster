@@ -32,8 +32,8 @@ namespace Tsunami.Coaster.ApplicationService
                 SourcePhoneNumber = phoneOptions.SourcePhoneNumber,
                 TargetPhoneNumber = phoneOptions.TargetPhoneNumber,
                 CallConnectedURL = phoneOptions.CallConnectedURL,
-                TwilioAPISID = "SKd364fabbbbff1ff9b40418b911018a41",
-                TwilioAPISecret = "vmfksJBpR3ol4hkMJ0OTuUIavIjXyRme"
+                TwilioAPISID = ConfigurationManager.AppSettings["TwilioAPISID"],
+                TwilioAPISecret = ConfigurationManager.AppSettings["TwilioAPISecret"]
             };
 
             await _phoneCallClient.SendAsync(phoneCall);
