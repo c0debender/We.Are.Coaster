@@ -130,7 +130,11 @@ namespace LiveCameraSample.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+
         [global::System.Configuration.DefaultSettingValueAttribute("https://westcentralus.api.cognitive.microsoft.com/")]
+
+        [global::System.Configuration.DefaultSettingValueAttribute("https://westcentralus.api.cognitive.microsoft.com/face/v1.0")]
+
         public string VisionAPIHost {
             get {
                 return ((string)(this["VisionAPIHost"]));

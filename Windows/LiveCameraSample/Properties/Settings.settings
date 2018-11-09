@@ -30,7 +30,11 @@
       <Value Profile="(Default)">https://westcentralus.api.cognitive.microsoft.com/face/v1.0</Value>
     </Setting>
     <Setting Name="VisionAPIHost" Type="System.String" Scope="User">
+
       <Value Profile="(Default)">https://westcentralus.api.cognitive.microsoft.com/</Value>
+
+      <Value Profile="(Default)">https://westcentralus.api.cognitive.microsoft.com/face/v1.0</Value>
+
     </Setting>
     <Setting Name="RecognizerSetupVisibility" Type="System.String" Scope="User">
       <Value Profile="(Default)">Visible</Value>

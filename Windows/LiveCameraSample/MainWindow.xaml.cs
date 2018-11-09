@@ -51,6 +51,10 @@ using FaceAPI = Microsoft.ProjectOxford.Face;
 using VisionAPI = Microsoft.ProjectOxford.Vision;
 using Tsunami.SafetyLine.API.Client;
 using Tsunami.SafetyLine.API.Client.Models;
+using Tsunami.Coaster.ApplicationService.Models;
+using System.Configuration;
+using Tsunami.Coaster.ApplicationService;
+using System.Web;
 
 namespace LiveCameraSample
 {
@@ -71,6 +75,9 @@ namespace LiveCameraSample
         private AppMode _mode;
         private DateTime _startTime;
         private const string _personGroupId = "myself_test";
+
+        private readonly IUserAppService _userAppService;
+        private readonly ICoasterPhoneCall _coasterPhoneCall;
 
         public enum AppMode
         {
@@ -170,6 +177,10 @@ namespace LiveCameraSample
 
             // Create local face detector. 
             _localFaceDetector.Load("Data/haarcascade_frontalface_alt2.xml");
+
+            //TODO: Coaster
+            _userAppService = new UserAppService();
+            _coasterPhoneCall = new CoasterPhoneCall();
         }
 
         /// <summary> Function which submits a frame to the Face API. </summary>
@@ -228,8 +239,12 @@ namespace LiveCameraSample
             {
                 if (emotion.Sadness >= 0.6)
                 {
+
                     MessageBox.Show($"I've detected you are {emotion.Sadness.ToString()} sad, something to cheer you up is on it's way!");
                     AddPanicEmergency(emotion.Sadness.ToString());
+
+                    
+
                 }
             }
 
@@ -527,7 +542,10 @@ namespace LiveCameraSample
             }
         }
 
-        private void AddPanicEmergency(string sadnessValue)
+
+       
+       private void AddPanicEmergency(string sadnessValue)
+
         {
             UserCredentials credentials = new UserCredentials()
             {
@@ -540,13 +558,47 @@ namespace LiveCameraSample
             {
                 Credentials = credentials
             };
+            
+            await worker.Emergency($"Attention, this user needs a coffee stat!");
 
-            UserInfo userInfo = new UserInfo();
+            await SendPhoneCall(credentials);
+        }
 
-            Task.Run(async () =>
+        private async Task SendPhoneCall(UserCredentials credentials)
+        {
+            UserDto user = await _userAppService.Get(credentials.CompanyId, credentials.UserId, credentials.Password);
+
+            var requestPath = "Callout/WorkerGracePeriodCall";
+
+            user.Name = "Kyle";
+            user.LastName = "";
+
+            var phoneOptions = new PhoneOptions()
             {
-                userInfo = await worker.Emergency($"Attention: This user is has a sadness value of {sadnessValue}, ordering a coffee!");
+
+              
+
+                  userInfo = await worker.Emergency($"Attention: This user is has a sadness value of {sadnessValue}, ordering a coffee!");
             }).GetAwaiter().GetResult();
+            
+                NotificationTypeID = 1,
+                CompanyLogin = "1095",
+                CompanyID = credentials.CompanyId,
+                TargetUserID = credentials.UserId,
+                SubjectUserID = credentials.UserId,
+                Message = ConfigurationManager.AppSettings["Message"],
+                TargetUserLoginId = credentials.UserId,
+                SourcePhoneNumber = ConfigurationManager.AppSettings["SourcePhoneNumber"],
+                TargetPhoneNumber = ConfigurationManager.AppSettings["TargetPhoneNumber"], //user.PhoneNumber,
+                LanguageCode = "en",
+                TwilioAPISID = "SKd364fabbbbff1ff9b40418b911018a41",
+                TwilioAPISecret = "vmfksJBpR3ol4hkMJ0OTuUIavIjXyRme"
+            };
+
+            phoneOptions.CallConnectedURL = $"https://twilio:SdF234fdsfsS23DF57@devivr.slmonitor.com/{requestPath}/?cid={HttpUtility.UrlEncode(phoneOptions.CompanyLogin)}&clid={HttpUtility.UrlEncode(phoneOptions.CompanyID)}&cn={HttpUtility.UrlEncode(phoneOptions.Message)}&tuid={HttpUtility.UrlEncode(user.Id.ToString())}&tulid={HttpUtility.UrlEncode(phoneOptions.TargetUserLoginId)}&tufn={HttpUtility.UrlEncode(user.Name)}&tuln={HttpUtility.UrlEncode(user.LastName)}&suid={HttpUtility.UrlEncode(user.Id.ToString())}&sufn={HttpUtility.UrlEncode(user.Name)}&suln={HttpUtility.UrlEncode(user.LastName)}&lc={HttpUtility.UrlEncode(phoneOptions.LanguageCode)}";
+
+            await _coasterPhoneCall.SendPhoneCall(phoneOptions);
+
         }
 
         private void SaveSettingsButton_Click(object sender, RoutedEventArgs e)

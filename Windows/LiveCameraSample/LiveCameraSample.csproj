@@ -154,6 +154,7 @@
     </Reference>
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -237,6 +238,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Tsunami.Coaster.ApplicationService\Tsunami.Coaster.ApplicationService.csproj">
+      <Project>{4d5e6d2c-e7b4-4f93-a4c1-1d34d642d870}</Project>
+      <Name>Tsunami.Coaster.ApplicationService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VideoFrameAnalyzer\VideoFrameAnalyzer.csproj">
       <Project>{bec7da78-c953-4a72-924f-2749d1f9f18b}</Project>
       <Name>VideoFrameAnalyzer</Name>
