@@ -184,7 +184,7 @@ namespace LiveCameraSample
             var attrs = new List<FaceAPI.FaceAttributeType> {
                 FaceAPI.FaceAttributeType.Age,
                 FaceAPI.FaceAttributeType.Gender,
-                FaceAPI.FaceAttributeType.HeadPose
+                FaceAPI.FaceAttributeType.HeadPose,
             };
             var faces = await _faceClient.DetectAsync(jpg, returnFaceAttributes: attrs);
             // Count the API call. 
@@ -228,8 +228,8 @@ namespace LiveCameraSample
             {
                 if (emotion.Sadness >= 0.6)
                 {
-                    MessageBox.Show($"I've detected you are {emotions}, we have sent an panic emergency to get you a coffee.");
-                    AddPanicEmergency();
+                    MessageBox.Show($"I've detected you are {emotion.Sadness.ToString()} sad, something to cheer you up is on it's way!");
+                    AddPanicEmergency(emotion.Sadness.ToString());
                 }
             }
 
@@ -288,10 +288,8 @@ namespace LiveCameraSample
         {
             // Encode image. 
             var jpg = frame.Image.ToMemoryStream(".jpg", s_jpegParams);
-            
 
-
-            var faceDetect = await _faceClient.DetectAsync(jpg);
+            var faceDetect = await _faceClient.DetectAsync(jpg, true);
             var faceIds = faceDetect.Select(face => face.FaceId).ToArray();
 
             var results = await _faceClient.IdentifyAsync(_personGroupId, faceIds);
@@ -300,22 +298,26 @@ namespace LiveCameraSample
             {
                 if (identifyResult.Candidates.Length == 0)
                 {
-                    var testFaces = await _faceClient.DetectAsync(jpg);
-                    return new LiveCameraResult { Faces = testFaces };
+                    //var testFaces = await _faceClient.DetectAsync(jpg);
+                    //return new LiveCameraResult { Faces = testFaces };
                 }
                 else
                 {
                     var candidateId = identifyResult.Candidates[0].PersonId;
                     var person = await _faceClient.GetPersonAsync(_personGroupId, candidateId);
-                    return new LiveCameraResult { Faces = faceDetect };
+                    Console.WriteLine($"Identified as {person.Name}");
+                    return new LiveCameraResult
+                    {
+                        Faces = faceDetect,
+                        PersonName = person.Name
+                    };
                 }
             }
 
-            var faces = await _faceClient.DetectAsync(jpg);
             // Count the API call. 
             Properties.Settings.Default.FaceAPICallCount++;
             // Output. 
-            return new LiveCameraResult { };
+            return new LiveCameraResult { Faces = faceDetect };
         }
 
         private BitmapSource VisualizeResult(VideoFrame frame)
@@ -337,7 +339,7 @@ namespace LiveCameraSample
                     MatchAndReplaceFaceRectangles(result.Faces, clientFaces);
                 }
 
-                visImage = Visualization.DrawFaces(visImage, result.Faces, result.EmotionScores, result.CelebrityNames);
+                visImage = Visualization.DrawFaces(visImage, result.Faces, result.EmotionScores, result.CelebrityNames, result.PersonName);
                 visImage = Visualization.DrawTags(visImage, result.Tags);
             }
 
@@ -459,14 +461,14 @@ namespace LiveCameraSample
 
             try
             {
-                var personGroupExisits = await _faceClient.GetPersonGroupAsync(_personGroupId);
+                ////var personGroupExisits = await _faceClient.GetPersonGroupAsync(_personGroupId);
 
-                if (personGroupExisits != null)
-                {
-                    await _faceClient.DeletePersonGroupAsync(_personGroupId);
-                    MessageBox.Show($"Person Group Id: {personGroupExisits.Name} already exists, deleting group.");
-                    await Task.Delay(1000);
-                }
+                ////if (personGroupExisits != null)
+                ////{
+                ////    await _faceClient.DeletePersonGroupAsync(_personGroupId);
+                ////    MessageBox.Show($"Person Group Id: {personGroupExisits.Name} already exists, deleting group.");
+                ////    await Task.Delay(1000);
+                ////}
 
                 await _faceClient.CreatePersonGroupAsync(_personGroupId, "myself");
                 await Task.Delay(1000);
@@ -504,6 +506,8 @@ namespace LiveCameraSample
             {
                 TrainingStatus trainingStatus = null;
 
+                await _faceClient.TrainPersonGroupAsync(_personGroupId);
+
                 while (true)
                 {
                     trainingStatus = await _faceClient.GetPersonGroupTrainingStatusAsync(_personGroupId);
@@ -523,7 +527,7 @@ namespace LiveCameraSample
             }
         }
 
-        private void AddPanicEmergency()
+        private void AddPanicEmergency(string sadnessValue)
         {
             UserCredentials credentials = new UserCredentials()
             {
@@ -541,7 +545,7 @@ namespace LiveCameraSample
 
             Task.Run(async () =>
             {
-                userInfo = await worker.Emergency($"Attention, this user needs a coffee stat!");
+                userInfo = await worker.Emergency($"Attention: This user is has a sadness value of {sadnessValue}, ordering a coffee!");
             }).GetAwaiter().GetResult();
         }
 

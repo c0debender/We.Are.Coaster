@@ -25,7 +25,7 @@ namespace LiveCameraSample.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("fe7fc215f24247f78957ec29aa68d8e3")]
         public string FaceAPIKey {
             get {
                 return ((string)(this["FaceAPIKey"]));
@@ -37,7 +37,7 @@ namespace LiveCameraSample.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5866d10176904968a0cede53ac0981bd")]
         public string VisionAPIKey {
             get {
                 return ((string)(this["VisionAPIKey"]));
@@ -118,7 +118,7 @@ namespace LiveCameraSample.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://westus.api.cognitive.microsoft.com/face/v1.0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://westcentralus.api.cognitive.microsoft.com/face/v1.0")]
         public string FaceAPIHost {
             get {
                 return ((string)(this["FaceAPIHost"]));
@@ -130,13 +130,25 @@ namespace LiveCameraSample.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://westus.api.cognitive.microsoft.com/vision/v1.0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://westcentralus.api.cognitive.microsoft.com/")]
         public string VisionAPIHost {
             get {
                 return ((string)(this["VisionAPIHost"]));
             }
             set {
                 this["VisionAPIHost"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Visible")]
+        public string RecognizerSetupVisibility {
+            get {
+                return ((string)(this["RecognizerSetupVisibility"]));
+            }
+            set {
+                this["RecognizerSetupVisibility"] = value;
             }
         }
     }

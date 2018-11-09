@@ -101,7 +101,7 @@ namespace LiveCameraSample
             return DrawOverlay(baseImage, drawAction);
         }
 
-        public static BitmapSource DrawFaces(BitmapSource baseImage, FaceAPI.Face[] faces, EmotionScores[] emotionScores, string[] celebName)
+        public static BitmapSource DrawFaces(BitmapSource baseImage, FaceAPI.Face[] faces, EmotionScores[] emotionScores, string[] celebName, string personName)
         {
             if (faces == null)
             {
@@ -133,6 +133,11 @@ namespace LiveCameraSample
                     if (celebName?[i] != null)
                     {
                         text += celebName[i];
+                    }
+
+                    if (personName != string.Empty)
+                    {
+                        text += personName;
                     }
 
                     faceRect.Inflate(6 * annotationScale, 6 * annotationScale);
