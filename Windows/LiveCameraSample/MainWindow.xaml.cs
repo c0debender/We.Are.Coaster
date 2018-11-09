@@ -241,7 +241,7 @@ namespace LiveCameraSample
                 {
 
                     MessageBox.Show($"I've detected you are {emotion.Sadness.ToString()} sad, something to cheer you up is on it's way!");
-                    AddPanicEmergency(emotion.Sadness.ToString());
+                    await AddPanicEmergency(emotion.Sadness.ToString());
 
                     
 
@@ -544,7 +544,7 @@ namespace LiveCameraSample
 
 
        
-       private void AddPanicEmergency(string sadnessValue)
+       private async Task AddPanicEmergency(string sadnessValue)
 
         {
             UserCredentials credentials = new UserCredentials()
@@ -575,11 +575,6 @@ namespace LiveCameraSample
 
             var phoneOptions = new PhoneOptions()
             {
-
-              
-
-                  userInfo = await worker.Emergency($"Attention: This user is has a sadness value of {sadnessValue}, ordering a coffee!");
-            }).GetAwaiter().GetResult();
             
                 NotificationTypeID = 1,
                 CompanyLogin = "1095",
