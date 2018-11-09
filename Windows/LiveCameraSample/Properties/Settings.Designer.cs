@@ -37,7 +37,7 @@ namespace LiveCameraSample.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5866d10176904968a0cede53ac0981bd")]
         public string VisionAPIKey {
             get {
                 return ((string)(this["VisionAPIKey"]));
@@ -130,7 +130,11 @@ namespace LiveCameraSample.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+
+        [global::System.Configuration.DefaultSettingValueAttribute("https://westcentralus.api.cognitive.microsoft.com/")]
+
         [global::System.Configuration.DefaultSettingValueAttribute("https://westcentralus.api.cognitive.microsoft.com/face/v1.0")]
+
         public string VisionAPIHost {
             get {
                 return ((string)(this["VisionAPIHost"]));
